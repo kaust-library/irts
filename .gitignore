@@ -1,0 +1,6 @@
+# ignore local credentials and api keys
+config/credentials.php
+# ignore database configuration
+config/database.php
+# ignore database configuration
+config/constants.php
