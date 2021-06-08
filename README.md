@@ -1,4 +1,4 @@
-# Institutional Research Tracking Service (IRTS)
+# Institutional Research Tracking Service (IRTS) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4911467.svg)](https://doi.org/10.5281/zenodo.4911467)
 
 Institutional Research Tracking Service (IRTS) provides a way for institutions to track publications and other research outputs affiliated to the institution and add records about them to their institutional repository. It is designed for use in conjunction with a [DSpace](https://duraspace.org/dspace/) repository (currently supporting [DSpace](https://duraspace.org/dspace/) versions 5 and 6).
 
