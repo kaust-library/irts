@@ -2,7 +2,7 @@
 
 /*
 
-**** This file is responsible for mapping the metadata for Genbank from NCBI to database.
+**** This file is responsible for converting the metadata from NCBI to the array structure needed to be saved locally.
 
 ** Parameters :
 	$input: the record metadata as xml
@@ -14,7 +14,8 @@
 */
 
 //--------------------------------------------------------------------------------------------
-/* function processNcbiRecord($input, $accessionNumber)
+
+function processNcbiRecord($input, $accessionNumber)
 {
 	global $irts, $report;
 
@@ -27,10 +28,6 @@
 	// convert the XML file to array
 	$xml2array = xml2array($input);
 	
-	//print_r($xml2array);
-	
-	//var_dump($xml2array);
-
 	// get the haspart relation
 	if(isset($input->DocumentSummary->Project->ProjectDescr->LocusTagPrefix))
 	{
@@ -82,73 +79,5 @@
 		}
 	}
 
-	return $record;
-} */
-
-function processNcbiRecord($input, $accessionNumber)
-{
-	global $irts, $report;
-
-	$source = 'ncbi';
-	$record = array();
-
-	$record['dc.type'][]['value'] =  'Biopsample';
-	$record['dc.type'][]['value'] =  'Dataset';
-
-	// convert the XML file to array
-	$xml2array = xml2array($input);
-	
-	//print_r($xml2array);
-	
-	//var_dump($xml2array);
-
-	// get the haspart relation
-	if(isset($input->BioSample->Links->Link))
-	{
-		
-		foreach($input->BioSample->Links->Link as $link)
-		{
-			 foreach($link ->attributes() as $a => $b)
-			{
-				//if (strpos($a, 'label') !== false)
-				  if ( $a=='label')
-				{ 
-			        //$value = (string)($b->attributes());
-					$record['dc.relation.ispartof'][]['value'] = 'bioproject:'.$b;
-				}  
-			}
-		}
-		
-	}	
-		if(isset($input->BioSample->Attributes->Attribute))
-	{
-		
-		foreach($input->BioSample->Attributes->Attribute as $key => $value)
-
-		{
-			 
-				//if (strpos($a, 'label') !== false)
-				  if (preg_match('/[0-9]+\.[0-9]+ N [0-9]+\.[0-9]+ E/ ',$value,$loc))
-				{ 
-			        //$value = (string)($b->attributes());
-					$location = explode(' ', $value, 3);
-					$location[1] = $location[0] . ' ' . $location[1];
-					array_shift($location);
-
-					$record['dwc.location.decimalLatitude'][]['value'] = $location[0] ;
-					$record['dwc.location.decimalLongitude'][]['value'] = $location[1] ;
-				}  
-			
-		}
-	}
-	
-
-	$record = iterateOverNcbiFields($record, $source, $xml2array);
-
-	$record['dc.publisher'][]['value'] = 'NCBI';
-	
-	$record['dc.relation.url'][]['value'] = 'https://www.ncbi.nlm.nih.gov/biosample/?term='.$accessionNumber;
-
-	
 	return $record;
 }

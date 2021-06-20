@@ -52,8 +52,6 @@ function harvestNcbi($source)
 		{
 			foreach($accessionNumbers as $accessionNumber)
 			{
-				//print_r($accessionNumber);
-				
 				if(!in_array($accessionNumber, $existingAccessionNumbers))
 				{
 					$accessionNumbersToCheck[] = $accessionNumber;
@@ -61,14 +59,12 @@ function harvestNcbi($source)
 			}
 		}
 	}
-		
-	//$accessionNumbersToCheck =  array('PRJNA281535'); 
 
 	$report .= '- '.count($accessionNumbersToCheck).' accession numbers to check: '.PHP_EOL;
 
 	$recordTypeCounts['accession numbers to check'] = count($accessionNumbersToCheck);
 
-	// for each accession numbers
+	// for each accession number
 	foreach($accessionNumbersToCheck as $accessionNumber)
 	{
 		$report .= 'Accession Number: '.$accessionNumber.PHP_EOL;
@@ -76,7 +72,7 @@ function harvestNcbi($source)
 		// Get the internal ID using the accession number
 		$xml = simplexml_load_string(queryNCBI('esearch.fcgi', 'bioproject', $accessionNumber, 'term'));
 
-		// Some items have more than one internalID but only one of these ID are associated with the internalID
+		// Some searches have more than one internalID result, but only the first one is actually for this accession number
 		foreach ($xml->IdList->Id as $internalID)
 		{
 			if(!empty($internalID))
